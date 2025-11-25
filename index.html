@@ -1,40 +1,17 @@
-<section id="form-envio">
-    <h2>Calcular Envío</h2>
+<section class="envio-container">
+  <div class="envio-card">
+    <h2>Calculadora de Envíos</h2>
 
-    <form id="envioForm" novalidate>
-        
-        <label for="dni">DNI:</label>
-        <input type="text" id="dni" name="dni" placeholder="12345678A" maxlength="9">
-        <span class="error" id="errorDni"></span>
+    <form id="form-envio">
+      <div class="form-group">
+        <label>DNI</label>
+        <input type="text" id="dni" placeholder="12345678A" required>
+      </div>
 
-        <label for="origen">Ciudad Origen:</label>
-        <select id="origen" name="origen">
-            <option value="">Selecciona ciudad</option>
-            <option value="palma">Palma</option>
-            <option value="madrid">Madrid</option>
-            <option value="barcelona">Barcelona</option>
-            <option value="valencia">Valencia</option>
-        </select>
-        <span class="error" id="errorOrigen"></span>
-
-        <label for="destino">Ciudad Destino:</label>
-        <select id="destino" name="destino">
-            <option value="">Selecciona ciudad</option>
-            <option value="palma">Palma</option>
-            <option value="madrid">Madrid</option>
-            <option value="barcelona">Barcelona</option>
-            <option value="valencia">Valencia</option>
-        </select>
-        <span class="error" id="errorDestino"></span>
-
-        <label for="peso">Peso (kg):</label>
-        <input type="number" id="peso" name="peso" min="0.1" step="0.01">
-        <span class="error" id="errorPeso"></span>
-
-        <button type="submit">Calcular Envío</button>
-    </form>
-
-    <div id="resultado"></div>
-</section>
-
-<script src="js/envio.js"></script>
+      <div class="form-group">
+        <label>Ciudad de Origen</label>
+        <select id="origen" required>
+          <option value="">Seleccione...</option>
+          <option value="Palma">Palma</option>
+          <option value="Madrid">Madrid</option>
+          <option value="Barcelona">Barcel

@@ -1,87 +1,39 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.getElementById("form-envio").addEventListener("submit", function(e) {
+    e.preventDefault();
 
-    const form = document.getElementById("envioForm");
+    const dni = document.getElementById("dni").value.trim();
+    const origen = document.getElementById("origen").value;
+    const destino = document.getElementById("destino").value;
+    const peso = parseFloat(document.getElementById("peso").value);
+    const resultado = document.getElementById("resultado");
 
-    form.addEventListener("submit", (e) => {
-        e.preventDefault();
-
-        clearErrors();
-        
-        const dni = document.getElementById("dni").value.trim().toUpperCase();
-        const origen = document.getElementById("origen").value;
-        const destino = document.getElementById("destino").value;
-        const pesoInput = document.getElementById("peso").value;
-
-        let valido = true;
-
-        if (!validarDNI(dni)) {
-            showError("errorDni", "DNI inválido.");
-            valido = false;
-        }
-
-        if (origen === "") {
-            showError("errorOrigen", "Selecciona ciudad de origen.");
-            valido = false;
-        }
-
-        if (destino === "") {
-            showError("errorDestino", "Selecciona ciudad de destino.");
-            valido = false;
-        }
-
-        if (pesoInput === "" || isNaN(parseFloat(pesoInput)) || parseFloat(pesoInput) <= 0) {
-            showError("errorPeso", "Introduce un peso válido mayor que 0.");
-            valido = false;
-        }
-
-        if (!valido) return;
-
-        const peso = parseFloat(pesoInput);
-
-        const precio = calcularPrecio(origen, destino, peso);
-
-        document.getElementById("resultado").textContent =
-            `Precio total del envío: ${precio.toFixed(2)} €`;
-    });
-
-    function showError(id, mensaje) {
-        document.getElementById(id).textContent = mensaje;
+    // Validación del DNI (8 dígitos + letra)
+    const dniRegex = /^[0-9]{8}[A-Za-z]$/;
+    if (!dniRegex.test(dni)) {
+        return mostrarMensaje("❌ El DNI no es válido.");
     }
 
-    function clearErrors() {
-        document.querySelectorAll(".error").forEach(e => e.textContent = "");
-        document.getElementById("resultado").textContent = "";
+    // Validar peso
+    if (isNaN(peso) || peso <= 0) {
+        return mostrarMensaje("❌ El peso debe ser un número válido.");
     }
 
-    function validarDNI(dni) {
-        const letras = "TRWAGMYFPDXBNJZSQVHLCKE";
-        const regex = /^\d{8}[A-Z]$/;
+    // Cálculo de precio base por ciudades
+    let precio = 0;
 
-        if (!regex.test(dni)) return false;
+    if (origen === destino) precio = 5;
+    else if (origen === "Palma" || destino === "Palma") precio = 9;
+    else precio = 7;
 
-        const numero = parseInt(dni.substring(0, 8), 10);
-        const letra = dni[8];
+    // Ajustes por peso
+    if (peso >= 20) precio *= 2;
+    else if (peso >= 10) precio *= 1.5;
 
-        return letras[numero % 23] === letra;
-    }
-
-    function calcularPrecio(origen, destino, peso) {
-        let precioBase = 0;
-
-        if (origen === destino) {
-            precioBase = 5;
-        } else if (origen === "palma" || destino === "palma") {
-            precioBase = 9;
-        } else {
-            precioBase = 7;
-        }
-
-        if (peso < 10) {
-            return precioBase;
-        } else if (peso < 20) {
-            return precioBase * 1.5;
-        } else {
-            return precioBase * 2;
-        }
-    }
+    mostrarMensaje(`✔ Precio final del envío: <strong>${precio.toFixed(2)} €</strong>`);
 });
+
+function mostrarMensaje(msg) {
+    const resultado = document.getElementById("resultado");
+    resultado.style.display = "block";
+    resultado.innerHTML = msg;
+}
